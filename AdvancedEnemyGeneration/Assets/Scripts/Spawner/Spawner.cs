@@ -14,7 +14,7 @@ public class Spawner : MonoBehaviour
     private void Awake()
     {
         _targets = _targetRepository.GetTargets();
-        _spawnPoints = _spawnPoitsRepository.GetSpawnPoints();
+        _spawnPoints = _spawnPoitsRepository._spawnPoints;
 
         Init();
     }
@@ -30,12 +30,10 @@ public class Spawner : MonoBehaviour
 
         foreach (Transform spawnPoint in _spawnPoints)
         {
-
             Transform randomTarget = _targets[Random.Range(minNumber, _targets.Length)];
-            randomTarget.TryGetComponent(out Painter targetPainter);
 
-            spawnPoint.gameObject.TryGetComponent(out SpawnPoint point);
-            point.SetTarget(randomTarget, targetPainter.Color);
+            if (randomTarget.TryGetComponent(out Painter targetPainter) && spawnPoint.gameObject.TryGetComponent(out SpawnPoint point))
+                point.SetTarget(randomTarget, targetPainter.Color);
         }
     }
 
@@ -57,12 +55,13 @@ public class Spawner : MonoBehaviour
         int minNumber = 0;
 
         Transform spawnPoint = _spawnPoints[Random.Range(minNumber, _spawnPoints.Length)];
-        spawnPoint.TryGetComponent(out SpawnPoint currentSpawnPoint);
-        spawnPoint.TryGetComponent(out Painter spawnPointPainter);
 
-        Enemy enemy = _enemyPool.GetEnemy();
-        enemy.gameObject.SetActive(true);
-        enemy.transform.position = spawnPoint.position;
-        enemy.StartLiveCycle(currentSpawnPoint.Target, spawnPointPainter.Color);
+        if (spawnPoint.TryGetComponent(out SpawnPoint currentSpawnPoint) && spawnPoint.TryGetComponent(out Painter spawnPointPainter))
+        {
+            Enemy enemy = _enemyPool.GetEnemy();
+            enemy.gameObject.SetActive(true);
+            enemy.transform.position = spawnPoint.position;
+            enemy.StartLiveCycle(currentSpawnPoint.Target, spawnPointPainter.Color);
+        }
     }
 }

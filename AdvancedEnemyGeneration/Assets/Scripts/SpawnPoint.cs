@@ -10,6 +10,7 @@ public class SpawnPoint : MonoBehaviour
     public void SetTarget(Transform target, Color color)
     {
         _target = target;
+
         ChangeColor(color);
     }
 

@@ -19,6 +19,6 @@ public class Painter : MonoBehaviour
 
     public void ChangeToRandomColor()
     {
-        _renderer.material.color = new Color(Random.value, Random.value, Random.value);
+        _renderer.material.color = Random.ColorHSV();
     }
 }
